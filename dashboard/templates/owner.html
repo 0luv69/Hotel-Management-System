@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Boxicons -->
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- My CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/ownerDashboard.css' %}">
+  <title>AdminDash</title>
+</head>
+<body>
+
+
+  <!-- CONTENT -->
+  <section id="content">
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>{{user.username}}'s Dashboard</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Dashboard</a>
+            </li>
+            <li><i class='bx bx-chevron-right' ></i></li>
+            <li>
+              <a class="active" href="#">Home</a>
+            </li>
+          </ul>
+        </div>
+        {% if hotels %}
+          <a href="{% url 'newRoom' 0%}" class="btn-download">
+          <i class='bx bxs-cloud-download' ></i>
+          <span class="text">Add Room</span>
+        </a>
+        {%else%}
+        <a href="{% url 'new-hotel' %}" class="btn-download">
+          <i class='bx bxs-cloud-download' ></i>
+          <span class="text">Add Hotel</span>
+        </a>
+        {% endif %}
+      </div>
+      <!-- <i class='bx bx-plus' ></i> -->
+      <ul class="box-info">
+       {% if hotels %}
+       <li> 
+        <img src="{{hotels.cover_image.url}}" class='bx bxs-calendar-check' ></i>
+        <span class="text">
+          <h3>{{hotels.hotel_name}}</h3>
+         <a href="{% url 'newRoom' hotels.pk %}">
+          Add room
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+          </svg>
+         </a>
+        </br>
+
+
+         <!--Edit-->
+         <a>
+          <a href="{% url 'updateHotel' hotels.pk %}"> Edit
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+          </svg>
+         </a>
+         </br>
+
+         <!--Delete Hotel-->
+         <form method="POST" action="{% url 'delHotel' hotels.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          Delete
+          <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+          
+        </form>
+      
+          
+        </span>
+      </li>
+       {% else %}
+       <li>
+        <span class="text">
+          <h3>You haven't added hotels</h3>          
+        </span>
+      </li>
+       {% endif %}
+      </ul>
+      <div class="table-data">
+        <div class="order">
+          <div class="head">
+            <h3>Recent Reservations </h3>
+            <!-- <i class='bx bx-filter' ></i> -->
+            <p>Current Guest Count: {{bookings | length}}</p>
+
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <!-- <th>Guests</th> -->
+                <th>Date Reserved</th>
+                <th>Time Reserved</th>
+                <th>Room</th>
+                <th>Hotel</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+             {% if bookings %}
+              <!-- Guests loop -->
+              {% for booking, amount in mylist %}
+              <tr>
+                <!-- <td>
+                  <p>{{booking.user.userBookings}}</p>
+                </td> -->
+                <td>{{booking.date|date}}</td>
+                <td>{{booking.date|time}}</td>
+                <td>{{booking.amount}}</td>
+                <td>{{booking.hotel}}</td>
+                <td>{{amount|intcomma}}</td>
+              </tr>
+              {% endfor %}
+              <!--Get Total booking amount-->
+              <tr>
+                <td>
+                  Sub-Total 
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><span class="status completed">{{sum|intcomma}}</span></td>
+
+              </tr>
+              <!--End Total Booking amount-->
+              <!-- end guests loop -->
+             {% else %}
+             {% endif %}
+            </tbody>
+          </table>
+        </div>
+        <div class="todo">
+          <div class="head">
+            <h3>Rooms & Suites</h3>
+            <!-- <i class='bx bx-plus' ></i>
+            <i class='bx bx-filter' ></i> -->
+          </div>
+          <ul class="todo-list">
+            <!-- loop rooms -->
+            {% if rooms %}
+            {% for room in rooms %}
+            <li class="completed">
+              <img src="{{room.image.url}}" class='bx bxs-calendar-check img-fluid' style="max-width: 50px;">
+              <p>{{room.name}}</p>
+              <p>{{room.tagline}}</p>
+
+          <!--Delete Room-->
+          <form method="POST" action="{% url 'delRoom' room.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            
+            <button style="background-color: transparent; border: none; box-shadow: none;" type="submit">
+              <!--<i class='bx bx-dots-vertical-rounded' ></i>-->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            
+          </form>
+
+
+           
+              
+            </li>
+            {% endfor %}
+            {% else %}
+            <li class="completed">
+              <p>You haven't added rooms yet...</p>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+  </body>
+</html>
+
+{% endblock content %}

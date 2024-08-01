@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Boxicons -->
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- My CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/ownerDashboard.css' %}">
+  <title>Hotel Admin Dashboard</title>
+</head>
+<body>
+
+     <!-- SIDEBAR -->
+  <section id="sidebar">
+    <a href="#" class="brand">
+      <i class='bx bxs-smile'></i>
+      <span class="text">WeConnect</span>
+    </a>
+    <ul class="side-menu top">
+      <li class="active">
+        <a href="#">
+          <i class='bx bxs-dashboard' ></i>
+          <span class="text">Dashboard</span>
+        </a>
+      </li>
+     
+    </ul>
+  </section>
+  <!--  SIDEBAR -->
+  
+  <!-- CONTENT -->
+  <section id="content">
+   
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Dashboard</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="{{ 'ownerDashboard' }}">Dashboard</a>
+            </li>
+            <li><i class='bx bx-chevron-right' ></i></li>
+            <li>
+              <a class="active" href="{{ 'ownerDashboard' }}">Home</a>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+      <div class="box-info">
+        <div class="d-flex flex-column justify-content-between order-summary">
+            <!--Form-->
+            <form method="POST" enctype="multipart/form-data">
+                 {% csrf_token %}
+                 {% for field in form.visible_fields %}
+                     <div class="form-group">
+                         {{ field.label_tag }}
+                             {% render_field field class="form-control" %}
+                             {% if messages%}
+                                 {% for message in messages %}
+                                 <span style="color:red">{{ message }}</span>
+                                 {% endfor %}
+                             {% endif %}
+                 {% endfor %}
+                 <br>
+                     <input type="submit" value="Add Hotel" class="btn btn-block btn-primary" style="background-color: #60D143; border: #60D143;">
+                     </div>
+            </form>
+
+            <!--EndForm-->
+         </div>
+      </div>
+
+     
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+  </body>
+</html>
+
+{% endblock content %}
