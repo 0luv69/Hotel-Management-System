@@ -36,7 +36,7 @@
           </ul>
         </div>
         {% if hotels %}
-          <a href="{% url 'newRoom' 0%}" class="btn-download">
+          <a href="{% url 'newRoom' hotels.pk %}" class="btn-download">
           <i class='bx bxs-cloud-download' ></i>
           <span class="text">Add Room</span>
         </a>
