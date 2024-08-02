@@ -35,7 +35,13 @@ def loginClient(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('clientDashboard')
+                if user.is_staff:
+                    return redirect('/admin/') 
+
+                if user.is_owner:
+                    return redirect('ownerDashboard')
+                else:
+                    return redirect('clientDashboard')
             else:
                 messages.error(request, "Invalid username or password")
         else:

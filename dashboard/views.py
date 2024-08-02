@@ -24,6 +24,8 @@ from accounts.models import *
 
 
 def clientDashboard(request):
+    if request.user.is_staff:
+        return redirect('/admin/') 
     currentUser = request.user.client
     activeBookings = Bookings.objects.filter(user=currentUser.pk).all() 
     books = list(activeBookings)
@@ -66,6 +68,8 @@ def addNewBooking(request, pk):
 
 
 def ownerDashboard(request):
+    if request.user.is_staff:
+        return redirect('/admin/') 
     currentUser = request.user.owner
     hotels = Hotel.objects.filter(admin=currentUser.pk).first()
     if hotels is None:
